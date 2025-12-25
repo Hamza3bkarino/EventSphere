@@ -3,11 +3,11 @@ export default function Home() {
     <section className="bg-img min-h-screen flex items-center justify-center">
       <div className="flex flex-col items-center text-center px-6">
 
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white max-w-4xl leading-tight drop-shadow-lg">
+        <h1 className="text-4xl md:text-7xl font-extrabold text-white max-w-4xl leading-tight drop-shadow-lg">
           Your Gateway to Unforgettable Events
         </h1>
 
-        <p className="mt-6 text-base md:text-lg text-white max-w-xl drop-shadow-md">
+        <p className="mt-6 text-base md:text-md text-white max-w-xl drop-shadow-md">
           Explore concerts, sports, shows, and cultural events.
           Book your tickets online and get instant confirmation by email.
         </p>

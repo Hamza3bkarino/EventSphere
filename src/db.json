@@ -1,0 +1,70 @@
+{
+  "events": [
+    {
+      "title": "Music Festival",
+      "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+      "category": "Music",
+      "date": "2025-12-05",
+      "location": "Rabat",
+      "price": "250",
+      "description": "A day full of live music and fun. Join your favorite artists and enjoy a variety of music genres.",
+      "ticketsAvailable": "200",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "title": "Art Exhibition",
+      "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+      "category": "Art",
+      "date": "2025-12-10",
+      "location": "Casablanca",
+      "price": 50,
+      "description": "Explore the latest modern art collection from talented local and international artists.",
+      "ticketsAvailable": "100"
+    },
+    {
+      "id": "3",
+      "title": "Football Match",
+      "image": "https://images.unsplash.com/photo-1505678261036-a3fcc5e884ee?auto=format&fit=crop&w=800&q=80",
+      "category": "Sport",
+      "date": "2025-12-15",
+      "location": "Marrakech",
+      "price": 300,
+      "description": "Exciting local derby between top teams. Be part of the cheering crowd and enjoy a thrilling match.",
+      "ticketsAvailable": "150"
+    },
+    {
+      "id": "4",
+      "title": "Food Carnival",
+      "image": "https://images.unsplash.com/photo-1505678261036-a3fcc5e884ee?auto=format&fit=crop&w=800&q=80",
+      "category": "Food",
+      "date": "2025-12-20",
+      "location": "Tangier",
+      "price": 80,
+      "description": "Taste the best local and international dishes. A paradise for food lovers with workshops and live cooking.",
+      "ticketsAvailable": "250"
+    },
+    {
+      "id": "6",
+      "title": "Jazz Night",
+      "image": "https://images.unsplash.com/photo-1511376777868-611b54f68947?auto=format&fit=crop&w=800&q=80",
+      "category": "Music",
+      "date": "2025-12-12",
+      "location": "Casablanca",
+      "price": 120,
+      "description": "An elegant evening with smooth jazz performances by renowned musicians.",
+      "ticketsAvailable": "120"
+    },
+    {
+      "id": "7",
+      "title": "Book Fair",
+      "image": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80",
+      "category": "Education",
+      "date": "2025-12-18",
+      "location": "Rabat",
+      "price": 20,
+      "description": "Discover and buy books from various genres, meet authors, and attend workshops.",
+      "ticketsAvailable": "500"
+    }
+  ]
+}
