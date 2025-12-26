@@ -11,9 +11,10 @@ import { setAdmin } from "../../lib/Redux/AdminSlice";
 export default function Dashboard() {
   const [logOutButton, setLogOutButton] = useState(false);
   const [AddForm, setAddForm] = useState(false);
-  const [AppearEvents, setAppearEvents] = useState(false);
+  const [AppearEvents, setAppearEvents] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const dispatch = useDispatch()
+  const [tapActive, setTapActive] = useState('events');
+  const dispatch = useDispatch();
 
   useEffect(() => {
      dispatch(setAdmin(true));
@@ -27,9 +28,15 @@ export default function Dashboard() {
 
   return (
     <div className="flex">
-            <aside className={`h-screen bg-white text-[#73301c] flex flex-col justify-between p-6 shadow-xl relative transition-all duration-300
-            ${collapsed ? "w-36 f" : "min-w-64"}
-            `}>
+            <aside
+                className={`
+                    fixed top-0 left-0 h-screen bg-white text-[#73301c]
+                    flex flex-col justify-between p-6 shadow-xl
+                    transition-all duration-300 z-40
+                    ${collapsed ? "w-26" : "w-64"}
+                `}
+            >
+
 
             {/* Top Section */}
             <div>
@@ -41,11 +48,14 @@ export default function Dashboard() {
                 <nav className={`space-y-3 flex flex-col ${collapsed ? "items-center" : ""}`}>
                     <button
                         className={`w-full flex items-center py-3 rounded-xl font-medium transition-all duration-300
-                        ${collapsed ? "justify-center px-0" : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}`}
+                        ${collapsed ? "justify-center px-0" : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}
+                        ${tapActive === 'commands' ? "bg-[#73301c] text-white"  : ""}
+                        `}
 
 
                         onClick={()=> {
-                            // setCollapsed((prev)=>!prev);
+                            setCollapsed((prev)=>!prev);
+                            setTapActive('commands')
                         }}
                     >
                         <MdDashboard size={30} />
@@ -55,13 +65,16 @@ export default function Dashboard() {
 
                     <button
                         className={`w-full flex items-center py-3 rounded-xl font-medium transition-all duration-300
-                        ${collapsed ? "justify-center px-0" : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}`}
+                        ${collapsed ? "justify-center px-0" : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}
+                        ${tapActive === 'Add' ? "bg-[#73301c] text-white"  : ""}
+                        `}
 
 
                         onClick={()=> {
                             setAddForm(true);
                             setAppearEvents(false);
-                                               
+                            setCollapsed((prev)=>!prev);  
+                            setTapActive('Add')  
                         }
                         }
                     >
@@ -70,14 +83,17 @@ export default function Dashboard() {
                     </button>
 
                     <button
-                        className={`w-full flex items-center py-3 rounded-xl font-medium transition-all duration-300
-                        ${collapsed ? "justify-center px-0" : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}`}
+                        className={`w-full flex items-center py-3 rounded-xl font-medium transition-all duration-300 
+                        ${collapsed ? "justify-center px-0 "  : "gap-3 px-4 hover:bg-[#73301c] hover:text-white"}
+                        ${tapActive === 'events' ? "bg-[#73301c] text-white"  : ""}
+                        `}
 
 
                         onClick={()=> {
                             setAppearEvents(true);
                             setAddForm(false);
                             setCollapsed((prev)=>!prev);
+                            setTapActive('events')
                         }}
                     >
                         <MdEventAvailable size={30} />
@@ -124,20 +140,28 @@ export default function Dashboard() {
 
             </aside>
 
-            {
-                AddForm &&(
-                        <div className=" flex items-center justify-center w-[80%]">
-                            <AddEvent/>
-                        </div>
-                )
-            }
-            {
-                AppearEvents &&(
-                        <div className="w-full">
-                            <AdminEvents/>
-                        </div>
-                )
-            }
+            <div
+                className={`
+                    ${collapsed ? "ml-26" : "ml-64"}
+                    flex-1 h-screen overflow-y-auto transition-all duration-300
+                `}
+                >
+
+                {
+                    AddForm &&(
+                            <div className=" flex items-center justify-center w-full h-screen">
+                                <AddEvent/>
+                            </div>
+                    )
+                }
+                {
+                    AppearEvents &&(
+                            <div className="w-full">
+                                <AdminEvents/>
+                            </div>
+                    )
+                }
+            </div>
     </div>
   );
 }

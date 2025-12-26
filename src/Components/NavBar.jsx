@@ -18,8 +18,8 @@ export default function Navbar() {
 
           {/* Navigation */}
           <div className="flex items-center space-x-8">
-            <a href="#home" className="nav-link">Home</a>
-            <a href="#events" className="nav-link">Events</a>
+            <a href="/" className="nav-link">Home</a>
+            <a href="/events" className="nav-link">Events</a>
             <a href="#contact" className="nav-link">Contact</a>
           </div>
 
