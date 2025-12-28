@@ -2,9 +2,12 @@ import { useState } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { GrUserAdmin } from "react-icons/gr";
 import { FiSearch, FiX } from "react-icons/fi";
+import { toggleCart } from "../lib/Redux/CartSlice";
+import { useDispatch } from "react-redux";
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] bg-white shadow-md rounded-2xl z-50">
@@ -56,7 +59,7 @@ export default function Navbar() {
 
             {/* Cart */}
             <button className="relative text-gray-600 hover:text-[#73301c] cursor-pointer">
-              <BsCart2 className="text-xl" />
+              <BsCart2 className="text-xl"  onClick={()=>dispatch(toggleCart((prev)=>!prev))}/>
               <span className="absolute -top-2 -right-2 bg-[#73301c] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 2
               </span>

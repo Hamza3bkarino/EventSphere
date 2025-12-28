@@ -29,7 +29,7 @@ export default function Events(){
                 <div className="mt-30">
                     <FilterEvents events={data} onFilter={setFilter}/>
                 </div>
-               <div className="grid w-full gap-4  place-items-center mt-10
+               <div className="grid w-[90%] mx-auto gap-4  place-items-center mt-10
                     grid-cols-1 
                     sm:grid-cols-2 
                     md:grid-cols-3 
