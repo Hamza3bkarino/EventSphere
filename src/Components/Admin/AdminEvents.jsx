@@ -25,7 +25,6 @@ export default function AdminEvents(){
 
     return(
         <>
-                {/* <FilterEvents events={data} onFilter={setFilter}/> */}
                <div className="grid w-full gap-4  place-items-center
                     grid-cols-1 
                     sm:grid-cols-2 

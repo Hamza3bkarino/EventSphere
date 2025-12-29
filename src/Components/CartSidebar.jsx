@@ -2,10 +2,12 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCart, incrementQty, decrementQty , removeFromCart } from "../lib/Redux/CartSlice";
 import { PiTrashSimpleDuotone } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
 export default function CartSidebar() {
   const { items: cartItems, isOpen } = useSelector(state => state.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -97,7 +99,12 @@ export default function CartSidebar() {
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>
-            <button className="w-full mt-4 bg-[#73301c] text-white py-3 rounded-xl hover:bg-[#5e2616]">
+            <button className="w-full mt-4 bg-[#73301c] text-white py-3 rounded-xl hover:bg-[#5e2616]"
+              onClick={()=> {
+                navigate('/checkout');
+                dispatch(toggleCart(false))
+              }}
+            >
               Checkout
             </button>
           </div>

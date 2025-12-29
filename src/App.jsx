@@ -7,6 +7,7 @@ import Home from './Pages/Home'
 import Navbar from './Components/NavBar'
 import Events from './Pages/Events';
 import CartSidebar from './Components/CartSidebar';
+import Checkout from './Pages/Checkout';
 
 
 function App() {
@@ -17,11 +18,12 @@ function App() {
       <Toaster position="top-right" />
 
       <Navbar/>
-      <CartSidebar />
       <BrowserRouter>
+        <CartSidebar />
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/events' element={<Events/>}/>
+          <Route path='/checkout' element={<Checkout/>}/>
           <Route path='/admin/Dashboard' element={<Admin/>}/>
         </Routes>
       </BrowserRouter>

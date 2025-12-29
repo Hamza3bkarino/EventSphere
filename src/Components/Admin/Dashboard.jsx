@@ -3,7 +3,7 @@ import { MdDashboard, MdEvent, MdEventAvailable } from "react-icons/md";
 import { FiLogOut, FiChevronUp, FiChevronDown } from "react-icons/fi";
 import AddEvent from "./AddEvent";
 import AdminEvents from "./AdminEvents";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAdmin } from "../../lib/Redux/AdminSlice";
 
 
@@ -11,9 +11,13 @@ import { setAdmin } from "../../lib/Redux/AdminSlice";
 export default function Dashboard() {
   const [logOutButton, setLogOutButton] = useState(false);
   const [AddForm, setAddForm] = useState(false);
+  const [orders, setOrders] = useState(false);
   const [AppearEvents, setAppearEvents] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [tapActive, setTapActive] = useState('events');
+  const ordersCart = useSelector((state)=>state.cart.orders);
+  console.log(ordersCart);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,7 +59,10 @@ export default function Dashboard() {
 
                         onClick={()=> {
                             setCollapsed((prev)=>!prev);
-                            setTapActive('commands')
+                            setTapActive('commands');
+                            setAppearEvents(false);
+                            setAddForm(false);
+                            setOrders(true);
                         }}
                     >
                         <MdDashboard size={30} />
@@ -161,6 +168,85 @@ export default function Dashboard() {
                             </div>
                     )
                 }
+
+                {orders && ordersCart.length>0 && (
+                    <div className="space-y-6">
+                        {ordersCart.map(order => (
+                        <div
+                            key={order.id}
+                            className="bg-white rounded-2xl shadow-lg p-6"
+                        >
+                            {/* ORDER HEADER */}
+                            <div className="flex justify-between items-center mb-4">
+                            <div>
+                                <h2 className="font-bold text-lg text-[#73301c]">
+                                Order #{order.id}
+                                </h2>
+                                <p className="text-sm text-gray-500">
+                                {order.customer.firstName} {order.customer.lastName} • {order.customer.phone}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                {order.customer.address}
+                                </p>
+                            </div>
+
+                            <div className="text-right">
+                                <p className="text-sm text-gray-500">Total</p>
+                                <p className="text-xl font-bold text-[#73301c]">
+                                ${order.total}
+                                </p>
+                            </div>
+                            </div>
+
+                            {/* ITEMS TABLE */}
+                            <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-100">
+                                <tr>
+                                    <th className="px-4 py-2 text-left">Product</th>
+                                    <th className="px-4 py-2">Image</th>
+                                    <th className="px-4 py-2 text-center">Qty</th>
+                                    <th className="px-4 py-2 text-right">Price</th>
+                                    <th className="px-4 py-2 text-right">Total</th>
+                                </tr>
+                                </thead>
+
+                                <tbody className="divide-y">
+                                {order.items.map(item => (
+                                    <tr key={item.id} className="hover:bg-gray-50">
+                                    <td className="px-4 py-2 font-medium">
+                                        {item.title}
+                                    </td>
+
+                                    <td className="px-4 py-2">
+                                        <img
+                                        src={item.image}
+                                        className="w-12 h-12 rounded object-cover mx-auto"
+                                        />
+                                    </td>
+
+                                    <td className="px-4 py-2 text-center">
+                                        {item.quantity}
+                                    </td>
+
+                                    <td className="px-4 py-2 text-right">
+                                        ${item.price}
+                                    </td>
+
+                                    <td className="px-4 py-2 text-right font-semibold">
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                    </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                    )}
+
+
             </div>
     </div>
   );
