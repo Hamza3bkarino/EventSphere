@@ -4,13 +4,15 @@ import { GrUserAdmin } from "react-icons/gr";
 import { FiSearch, FiX } from "react-icons/fi";
 import { toggleCart } from "../lib/Redux/CartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
-
+  const navigate = useNavigate();
   const item = useSelector((state)=>state.cart.items)
+  const isOpen = useSelector(state => state.cart.isOpen);
   const isAdmin = useSelector((state)=>state.admin.isAdmin)
-  
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -29,7 +31,7 @@ export default function Navbar() {
                       <div className="flex items-center space-x-8">
                         <a href="/" className="nav-link">Home</a>
                         <a href="/events" className="nav-link">Events</a>
-                        <a href="#contact" className="nav-link">Contact</a>
+                        <a href="/contact" className="nav-link">Contact</a>
                       </div>
 
                       {/* Right section */}
@@ -65,7 +67,7 @@ export default function Navbar() {
 
                         {/* Cart */}
                         <button className="relative text-gray-600 hover:text-[#73301c] cursor-pointer">
-                          <BsCart2 className="text-xl"  onClick={()=>dispatch(toggleCart((prev)=>!prev))}/>
+                          <BsCart2 className="text-xl"  onClick={()=>dispatch(toggleCart(!isOpen))}/>
                           <span className={`absolute -top-2 -right-2 bg-[#73301c] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ${item.length === 0 ? 'hidden':'block' }`}>
                             {item.length}
                           </span>
@@ -73,7 +75,9 @@ export default function Navbar() {
 
                         {/* Admin */}
                         <button className="text-gray-600 hover:text-[#73301c] cursor-pointer">
-                          <GrUserAdmin className="text-xl" />
+                          <GrUserAdmin className="text-xl" 
+                            onClick={()=>navigate('/admin/dashboard')}
+                          />
                         </button>
 
                       </div>

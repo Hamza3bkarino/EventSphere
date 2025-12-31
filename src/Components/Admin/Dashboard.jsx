@@ -5,6 +5,7 @@ import AddEvent from "./AddEvent";
 import AdminEvents from "./AdminEvents";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdmin } from "../../lib/Redux/AdminSlice";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,8 +17,7 @@ export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const [tapActive, setTapActive] = useState('events');
   const ordersCart = useSelector((state)=>state.cart.orders);
-  console.log(ordersCart);
-  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -99,6 +99,7 @@ export default function Dashboard() {
                         onClick={()=> {
                             setAppearEvents(true);
                             setAddForm(false);
+                            setOrders(false);
                             setCollapsed((prev)=>!prev);
                             setTapActive('events')
                         }}
@@ -138,7 +139,9 @@ export default function Dashboard() {
                 ${logOutButton && !collapsed ? "opacity-100 -translate-y-2" : "opacity-0 translate-y-4 pointer-events-none"}`}
                 >
                 <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                    bg-[#73301c] text-white hover:bg-[#5e2616] transition">
+                    bg-[#73301c] text-white hover:bg-[#5e2616] transition"
+                    onClick={()=>navigate('/events')}
+                >
                     <FiLogOut size={18} />
                     Logout
                 </button>
@@ -170,7 +173,7 @@ export default function Dashboard() {
                 }
 
                 {orders && ordersCart.length>0 && (
-                    <div className="space-y-6">
+                    <div className="space-y-6 w-[90%] mx-auto mt-10">
                         {ordersCart.map(order => (
                         <div
                             key={order.id}
