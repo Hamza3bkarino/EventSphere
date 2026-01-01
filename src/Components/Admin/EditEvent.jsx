@@ -120,9 +120,9 @@ export default function EditEvent({data , onClose }) {
     }
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center overflow-hidden">
       
-        <div className="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border border-[#73301c]/20 relative">
+        <div className="max-w-md mx-auto bg-white p-4 rounded-2xl shadow-xl border border-[#73301c]/20 relative">
               <h2 className="text-2xl font-extrabold text-[#73301c] mb-6 text-center">Edit Event</h2>
               <button
                 className="absolute top-3 right-3 text-gray-500 hover:text-black"
@@ -130,7 +130,7 @@ export default function EditEvent({data , onClose }) {
                 >
                 ✕
                 </button>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-2">
         
                 {/* Title */}
                 <div className="flex flex-col">
@@ -221,7 +221,7 @@ export default function EditEvent({data , onClose }) {
                     placeholder="Event Description"
                     value={formData.description}
                     onChange={handleChange}
-                    rows="3"
+                    rows="2"
                     className="w-full outline-none text-sm resize-none"
                   />
                 </div>
@@ -259,7 +259,7 @@ export default function EditEvent({data , onClose }) {
                   </div>
                   {preview && (
                     <div className="flex items-center space-x-4 mt-2">
-                      <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded-md border" />
+                      <img src={preview} alt="Preview" className="w-[150px] h-[100px] object-cover rounded-md border" />
                       <IoClose
                         className="w-6 h-6 text-[#73301c] cursor-pointer hover:text-red-500 transition"
                         onClick={() => {

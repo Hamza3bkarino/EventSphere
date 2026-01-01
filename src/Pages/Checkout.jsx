@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { addOrder, clearCart } from "../lib/Redux/CartSlice";
 import ThankYou from "./Thanks";
+import axios from "axios";
 
 export default function Checkout() {
   const cartItems = useSelector(state => state.cart.items);
@@ -14,6 +15,7 @@ export default function Checkout() {
     lastName: "",
     address: "",
     phone: "",
+    email: "",
   });
 
   const total = cartItems.reduce(
@@ -29,46 +31,86 @@ export default function Checkout() {
     });
   };
 
-  // Handle form submission
-  const handleConfirm = (e) => {
+
+  const handleConfirm = async (e) => {
     e.preventDefault();
+  
     const newErrors = {};
     let valid = true;
-    if(!formData.firstName.trim()){
-        newErrors.firstName='firstname is required';
-        valid = false;
+  
+    // Validation
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+      valid = false;
     }
-    if(!formData.lastName.trim()){
-        newErrors.lastName='lastname is required';
-        valid = false;
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+      valid = false;
     }
-    if(!formData.address.trim()){
-        newErrors.address='address is required';
-        valid = false;
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required';
+      valid = false;
     }
-    if(!formData.phone.trim()){
-        newErrors.phone='phone is required';
-        valid = false;
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone is required';
+      valid = false;
+    } else if (!/^\+?\d{7,15}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Phone number is invalid';
+      valid = false;
     }
-
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'Email is invalid';
+      valid = false;
+    }
+  
     setErrors(newErrors);
-
-
-    if(valid){
-        dispatch(addOrder({
-            customer: formData,
-            items: cartItems,
-            total: total.toFixed(2),
-        }));
-        toast.success('Order has confiremed !')
-        dispatch(clearCart())
-        setThanks(true)
-        
-    }else{
-        toast.error('order error')
+  
+    if (!valid) {
+      toast.error('Please fix the errors before confirming the order.');
+      return;
     }
-
+  
+    try {
+      // Send data to n8n webhook using Axios
+      const response = await axios.post(
+        'https://hamzaerraji.app.n8n.cloud/webhook/order-form',
+        {
+          customer: formData,
+          items: cartItems,
+          total: total.toFixed(2),
+        },
+        {
+          headers: {
+          "Content-Type": "application/json",
+          },
+      }
+      );
+  
+      // Optional: check response status
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error('Failed to send order to server');
+      }
+  
+      // Dispatch local Redux actions
+      dispatch(addOrder({
+        customer: formData,
+        items: cartItems,
+        total: total.toFixed(2),
+      }));
+      dispatch(clearCart());
+      setThanks(true);
+  
+      toast.success('Order has been confirmed and sent successfully!');
+  
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to send order. Please try again.');
+    }
   };
+  
 
     if (thanks) return <ThankYou />;
 
@@ -149,6 +191,22 @@ export default function Checkout() {
               />
               {errors?.phone && (
                 <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="+212 6xx xxx xxx"
+                className={`w-full border-2 px-4 py-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#73301c] transition ${
+                  errors?.email ? "border-red-500" : "border-[#73301c]"
+                }`}
+              />
+              {errors?.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
 
