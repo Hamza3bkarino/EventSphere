@@ -32,65 +32,86 @@ export default function Checkout() {
     });
   };
 
-  // Handle form submission
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Handle form submission
   const handleConfirm = async (e) => {
     e.preventDefault();
-
-    if (!validate()) {
-      toast.error("Please fix the errors in the form.");
+  
+    const newErrors = {};
+    let valid = true;
+  
+    // Validation
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+      valid = false;
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+      valid = false;
+    }
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required';
+      valid = false;
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone is required';
+      valid = false;
+    } else if (!/^\+?\d{7,15}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Phone number is invalid';
+      valid = false;
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'Email is invalid';
+      valid = false;
+    }
+  
+    setErrors(newErrors);
+  
+    if (!valid) {
+      toast.error('Please fix the errors before confirming the order.');
       return;
     }
-
-    setLoading(true);
-
+  
     try {
-      // Send order to n8n
-      await axios.post(
-        "https://hamzaerraji.app.n8n.cloud/webhook-test/order-form",
+      // Send data to n8n webhook using Axios
+      const response = await axios.post(
+        'https://hamzaerraji.app.n8n.cloud/webhook/order-form',
         {
           customer: formData,
           items: cartItems,
           total: total.toFixed(2),
-          createdAt: new Date().toISOString(),
         },
-        // {
-        //   headers: { "Content-Type": "application/json" },
-        // }
+        {
+          headers: {
+          "Content-Type": "application/json",
+          },
+      }
       );
-
-      // Save order in Redux
+  
+      // Optional: check response status
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error('Failed to send order to server');
+      }
+  
+      // Dispatch local Redux actions
       dispatch(addOrder({
         customer: formData,
         items: cartItems,
         total: total.toFixed(2),
       }));
-
-      // Clear cart
       dispatch(clearCart());
-
-      toast.success("Order has been confirmed 🎉");
       setThanks(true);
-
+  
+      toast.success('Order has been confirmed and sent successfully!');
+  
     } catch (error) {
-      console.error("N8N Error:", error);
-      toast.error("Failed to send order, please try again ❌");
-    } finally {
-      setLoading(false);
+      console.error(error);
+      toast.error('Failed to send order. Please try again.');
     }
   };
+  
 
 
     if (thanks) return <ThankYou />;
@@ -174,7 +195,6 @@ export default function Checkout() {
                 <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
               )}
             </div>
-
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
@@ -182,7 +202,7 @@ export default function Checkout() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="email"
+                placeholder="+212 6xx xxx xxx"
                 className={`w-full border-2 px-4 py-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#73301c] transition ${
                   errors?.email ? "border-red-500" : "border-[#73301c]"
                 }`}
@@ -191,6 +211,7 @@ export default function Checkout() {
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
+
 
             <button
               type="submit"

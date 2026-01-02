@@ -1,4 +1,5 @@
 
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Admin from './Pages/Admin/Admin'
@@ -10,6 +11,8 @@ import CartSidebar from './Components/CartSidebar';
 import Checkout from './Pages/Checkout';
 import Contact from './Pages/Contact';
 import Footer from './Components/Footer';
+import LogIn from './Pages/logIn';
+import ProtectedAdmin from './Components/Admin/ProtectedAdmin';
 
 
 function App() {
@@ -27,7 +30,8 @@ function App() {
           <Route path='/events' element={<Events/>}/>
           <Route path='/contact' element={<Contact/>}/>
           <Route path='/checkout' element={<Checkout/>}/>
-          <Route path='/admin/Dashboard' element={<Admin/>}/>
+          <Route path='/logIn' element={<LogIn/>}/>
+          <Route path='/admin/Dashboard' element={<ProtectedAdmin> <Admin/> </ProtectedAdmin> }/>
         </Routes>
         <Footer/>
       </BrowserRouter>

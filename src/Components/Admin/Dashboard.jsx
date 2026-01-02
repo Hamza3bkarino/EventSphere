@@ -20,13 +20,13 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-     dispatch(setAdmin(true));
+//   useEffect(() => {
+//      dispatch(setAdmin(true));
  
-     return () => {
-       dispatch(setAdmin(false)); // when leaving page
-     };
-   }, [dispatch]);
+//      return () => {
+//        dispatch(setAdmin(false)); // when leaving page
+//      };
+//    }, [dispatch]);
 
   
 
@@ -140,7 +140,10 @@ export default function Dashboard() {
                 >
                 <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl
                     bg-[#73301c] text-white hover:bg-[#5e2616] transition"
-                    onClick={()=>navigate('/events')}
+                    onClick={()=> {
+                        dispatch(setAdmin(false));
+
+                    }}
                 >
                     <FiLogOut size={18} />
                     Logout

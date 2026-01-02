@@ -44,7 +44,7 @@ export default function Contact() {
     if (!validate()) return;
     try {
          await axios.post(
-            "https://hamzaerraji.app.n8n.cloud/webhook-test/contact-form",
+            "https://hamzaerraji.app.n8n.cloud/webhook/contact-form",
             form,
             {
                 headers: {

@@ -76,7 +76,7 @@ export default function Navbar() {
                         {/* Admin */}
                         <button className="text-gray-600 hover:text-[#73301c] cursor-pointer">
                           <GrUserAdmin className="text-xl" 
-                            onClick={()=>navigate('/admin/dashboard')}
+                            onClick={()=>navigate('/logIn')}
                           />
                         </button>
 
