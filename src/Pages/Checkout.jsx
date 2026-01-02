@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { addOrder, clearCart } from "../lib/Redux/CartSlice";
 import ThankYou from "./Thanks";
+import axios from "axios";
 
 export default function Checkout() {
   const cartItems = useSelector(state => state.cart.items);
@@ -14,7 +15,9 @@ export default function Checkout() {
     lastName: "",
     address: "",
     phone: "",
+    email: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -30,45 +33,65 @@ export default function Checkout() {
   };
 
   // Handle form submission
-  const handleConfirm = (e) => {
-    e.preventDefault();
+  const validate = () => {
     const newErrors = {};
-    let valid = true;
-    if(!formData.firstName.trim()){
-        newErrors.firstName='firstname is required';
-        valid = false;
-    }
-    if(!formData.lastName.trim()){
-        newErrors.lastName='lastname is required';
-        valid = false;
-    }
-    if(!formData.address.trim()){
-        newErrors.address='address is required';
-        valid = false;
-    }
-    if(!formData.phone.trim()){
-        newErrors.phone='phone is required';
-        valid = false;
-    }
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
 
     setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
+  // Handle form submission
+  const handleConfirm = async (e) => {
+    e.preventDefault();
 
-    if(valid){
-        dispatch(addOrder({
-            customer: formData,
-            items: cartItems,
-            total: total.toFixed(2),
-        }));
-        toast.success('Order has confiremed !')
-        dispatch(clearCart())
-        setThanks(true)
-        
-    }else{
-        toast.error('order error')
+    if (!validate()) {
+      toast.error("Please fix the errors in the form.");
+      return;
     }
 
+    setLoading(true);
+
+    try {
+      // Send order to n8n
+      await axios.post(
+        "https://hamzaerraji.app.n8n.cloud/webhook-test/order-form",
+        {
+          customer: formData,
+          items: cartItems,
+          total: total.toFixed(2),
+          createdAt: new Date().toISOString(),
+        },
+        // {
+        //   headers: { "Content-Type": "application/json" },
+        // }
+      );
+
+      // Save order in Redux
+      dispatch(addOrder({
+        customer: formData,
+        items: cartItems,
+        total: total.toFixed(2),
+      }));
+
+      // Clear cart
+      dispatch(clearCart());
+
+      toast.success("Order has been confirmed 🎉");
+      setThanks(true);
+
+    } catch (error) {
+      console.error("N8N Error:", error);
+      toast.error("Failed to send order, please try again ❌");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
     if (thanks) return <ThankYou />;
 
@@ -152,11 +175,28 @@ export default function Checkout() {
               )}
             </div>
 
+            <div>
+              <label className="block text-sm font-medium mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="email"
+                className={`w-full border-2 px-4 py-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#73301c] transition ${
+                  errors?.email ? "border-red-500" : "border-[#73301c]"
+                }`}
+              />
+              {errors?.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+            </div>
+
             <button
               type="submit"
               className="w-full bg-[#73301c] text-white py-3 rounded-sm font-semibold text-lg hover:bg-[#5e2616] transition"
             >
-              Complete Order
+              {loading ? "Processing..." : "Complete Order"}
             </button>
           </form>
         </div>
